@@ -484,7 +484,7 @@ class Editor(GladeDelegate):
         self.menubar.insert_action_group(actions, 0)
         try:
             mergeid = self.menubar.add_ui_from_string(menu_layout)
-        except gobject.GError, error:
+        except gobject.GError as error:
             print('Building menu failed: %s, %s' % (error, mergeid))
 
         # Initialize the project tree, passing in the menu bar

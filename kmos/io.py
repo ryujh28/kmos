@@ -1512,7 +1512,7 @@ class ProcListWriter():
                 try:
                     action = [action for action in process0.action_list
                                             if condition.coord == action.coord][0]
-                except Exception, e:
+                except Exception as e:
                     print(e)
                     print('Trouble with process %s' % process.name)
                     print('And condition %s' % condition)
@@ -2924,13 +2924,13 @@ class ProcListWriter():
                 parameters = {}
                 for param in data.parameter_list:
                     parameters[param.name] = {'value': param.value}
-            except Exception, e:
+            except Exception as e:
                 raise UserWarning('Parameter ill-defined(%s)\n%s\nProcess: %s'
                                   % (param, e, process.name))
 
             try:
                 evaluate_rate_expression(process.rate_constant, parameters)
-            except Exception, e:
+            except Exception as e:
                 raise UserWarning('Could not evaluate (%s)\n%s\nProcess: %s'
                                   % (process.rate_constant, e, process.name))
         out.write('    }\n\n')
@@ -3079,7 +3079,7 @@ def export_source(project_tree, export_dir=None, code_generator=None, options=No
 
     for filename in exec_files:
         shutil.copy(os.path.join(APP_ABS_PATH, filename), export_dir)
-        os.chmod(os.path.join(export_dir, filename), 0755)
+        os.chmod(os.path.join(export_dir, filename), 0o0755)
 
     # SECOND
     # produce those source files that are written on the fly

@@ -78,7 +78,7 @@ import sys
 try:
     from kmc_model import base, lattice, proclist
     import kmc_model
-except Exception, e:
+except Exception as e:
     base = lattice = proclist = None
     print("""Error: %s
     Could not find the kmc module. The kmc implements the actual
@@ -104,7 +104,7 @@ except:
 
 try:
     import kmc_settings as settings
-except Exception, e:
+except Exception as e:
     settings = None
     print("""Error %s
     Could import settings file
@@ -263,7 +263,7 @@ class KMC_Model(Process):
                 try:
                     self.species_representation[len(self.species_representation)] \
                     = eval(settings.representations[species])
-                except Exception, e:
+                except Exception as e:
                     print('Trouble with representation %s'
                            % settings.representations[species])
                     print(e)
@@ -1269,7 +1269,7 @@ class KMC_Model(Process):
                 if self.base.get_avail_site(process, site, 2):
                     avail.append(ProcInt(process, self.settings))
 
-        except Exception, e:
+        except Exception as e:
             # if is not iterable, interpret as process
             for x in range(self.lattice.system_size[0]):
                 for y in range(self.lattice.system_size[1]):
@@ -2249,7 +2249,7 @@ def set_rate_constants(parameters=None, print_rates=None):
             if print_rates:
                 n = int(4 * log(rate_const))
                 print('%30s: %.3e s^{-1}: %s' % (proc, rate_const, '#' * n))
-        except Exception, e:
+        except Exception as e:
             raise UserWarning(
                 "Could not set %s for process %s!\nException: %s" \
                     % (rate_expr, proc, e))

@@ -39,7 +39,8 @@ requires = [
                     'pygtk',
                    ]
 license = 'COPYING'
-long_description = file('README.rst').read()
+f = open('README.rst','r')
+long_description = f.read()
 name='python-kmos'
 packages = [
            'kmos',
