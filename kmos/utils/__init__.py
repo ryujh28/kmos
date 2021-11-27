@@ -21,7 +21,7 @@
 from __future__ import with_statement
 import re
 from time import time
-from StringIO import StringIO
+from io import StringIO
 from kmos.utils.ordered_dict import OrderedDict
 
 ValidationError = UserWarning

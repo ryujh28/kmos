@@ -67,7 +67,7 @@ def evaluate_rate_expression(rate_expr, parameters={}):
         parameters = [Parameter(), ... ]
      """
     import tokenize
-    import StringIO
+    from io import StringIO
     import math
     from kmos import units
 
