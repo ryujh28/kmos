@@ -40,7 +40,6 @@ requires = [
                    ]
 license = 'COPYING'
 f = open('README.rst','r')
-
 long_description = f.read()
 name='python-kmos'
 packages = [
