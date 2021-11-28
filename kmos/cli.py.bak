@@ -39,7 +39,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with kmos.  If not, see <http://www.gnu.org/licenses/>.
 
-
+from __future__ import with_statement
 import os
 import shutil
 
@@ -270,7 +270,7 @@ def main(args=None):
 
     global model, pt, np, cm_model
 
-    if not args[0] in list(usage.keys()):
+    if not args[0] in usage.keys():
         args[0] = match_keys(args[0], usage, parser)
 
     if args[0] == 'benchmark':
@@ -287,9 +287,9 @@ def main(args=None):
             model.do_steps(nsteps)
 
         needed_time = time() - time0
-        print(('Using the [%s] backend.' % model.get_backend()))
-        print(('%s steps took %.2f seconds' % (nsteps, needed_time)))
-        print(('Or %.2e steps/s' % (1e6 / needed_time)))
+        print('Using the [%s] backend.' % model.get_backend())
+        print('%s steps took %.2f seconds' % (nsteps, needed_time))
+        print('Or %.2e steps/s' % (1e6 / needed_time))
         model.deallocate()
     elif args[0] == 'build':
         from kmos.utils import build
@@ -306,7 +306,7 @@ def main(args=None):
             parser.error('XML file and export path expected.')
         if len(args) < 3:
             out_dir = '%s_%s' % (os.path.splitext(args[1])[0], options.backend)
-            print(('No export path provided. Exporting to %s' % out_dir))
+            print('No export path provided. Exporting to %s' % out_dir)
             args.append(out_dir)
 
         xml_file = args[1]
@@ -326,7 +326,7 @@ def main(args=None):
         if len(args) < 3:
             out_dir = '%s_%s' % (os.path.splitext(args[1])[0], options.backend)
 
-            print(('No export path provided. Exporting to %s' % out_dir))
+            print('No export path provided. Exporting to %s' % out_dir)
             args.append(out_dir)
 
         xml_file = args[1]
@@ -352,14 +352,14 @@ def main(args=None):
                     if options.overwrite :
                         overwrite = 'y'
                     else:
-                        overwrite = input(('Should I overwrite existing %s ?'
+                        overwrite = raw_input(('Should I overwrite existing %s ?'
                                                '[y/N]  ') % out).lower()
                     if overwrite.startswith('y') :
-                        print(('Overwriting {out}'.format(**locals())))
+                        print('Overwriting {out}'.format(**locals()))
                         os.remove('../%s' % out)
                         shutil.move(out, '..')
                     else :
-                        print(('Skipping {out}'.format(**locals())))
+                        print('Skipping {out}'.format(**locals()))
                 else:
                     shutil.move(out, '..')
 
@@ -368,8 +368,8 @@ def main(args=None):
         pt = kmos.io.import_file(args[1])
         if len(args) < 3:
             out_dir = os.path.splitext(args[1])[0]
-            print(('No export path provided. Exporting kmc_settings.py to %s'
-                  % out_dir))
+            print('No export path provided. Exporting kmc_settings.py to %s'
+                  % out_dir)
             args.append(out_dir)
 
         if not os.path.exists(args[2]):
@@ -384,12 +384,12 @@ def main(args=None):
             parser.error('Which help do you  want?')
         if args[1] == 'all':
             for command in sorted(usage):
-                print((usage[command]))
+                print(usage[command])
         elif args[1] in usage:
-            print(('Usage: %s\n' % usage[args[1]]))
+            print('Usage: %s\n' % usage[args[1]])
         else:
             arg = match_keys(args[1], usage, parser)
-            print(('Usage: %s\n' % usage[arg]))
+            print('Usage: %s\n' % usage[arg])
 
     elif args[0] == 'import':
         import kmos.io
@@ -479,7 +479,7 @@ def main(args=None):
         path.append(os.path.abspath(os.curdir))
         from kmos.run import KMC_Model
         model = KMC_Model(banner=False, print_rates=False)
-        print((model.xml()))
+        print(model.xml())
 
     else:
         parser.error('Command "%s" not understood.' % args[0])

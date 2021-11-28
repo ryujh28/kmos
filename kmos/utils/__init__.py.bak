@@ -18,7 +18,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with kmos.  If not, see <http://www.gnu.org/licenses/>.
 
-
+from __future__ import with_statement
 import re
 from time import time
 from io import StringIO
@@ -127,7 +127,7 @@ def write_py(fileobj, images, **kwargs):
         else:
             fileobj.write("          scaled_positions=np.array(\n      %s),\n"
                           % repr(list((np.around(image.get_scaled_positions(), decimals=7)).tolist())))
-        print((image.get_scaled_positions()))
+        print(image.get_scaled_positions())
         fileobj.write('),\n')
 
     fileobj.write(']')
@@ -135,7 +135,7 @@ def write_py(fileobj, images, **kwargs):
 
 def get_ase_constructor(atoms):
     """Return the ASE constructor string for `atoms`."""
-    if isinstance(atoms, str):
+    if isinstance(atoms, basestring):
         #return atoms
         atoms = eval(atoms)
     if type(atoms) is list:
@@ -191,13 +191,13 @@ def download(project):
     response = HttpResponse(mimetype='application/x-zip-compressed')
     response['Content-Disposition'] = 'attachment; filename="kmos_export.zip"'
 
-    if isinstance(project, str):
+    if isinstance(project, basestring):
         project = import_xml(project)
 
     try:
-        from io import StringIO
+        from cStringIO import StringIO
     except:
-        from io import StringIO
+        from StringIO import StringIO
     stringio = StringIO()
     zfile = zipfile.ZipFile(stringio, 'w')
 
@@ -486,7 +486,7 @@ def timeit(func):
     def wrapper(*args, **kwargs):
         time0 = time()
         func(*args, **kwargs)
-        print(('Executing %s took %.3f s' % (func.__name__, time() - time0)))
+        print('Executing %s took %.3f s' % (func.__name__, time() - time0))
     return wrapper
 
 

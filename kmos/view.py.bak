@@ -312,8 +312,8 @@ class KMC_ViewBox(threading.Thread, View, Status, FakeUI):
                 self.signal_queue.put('START')
                 self.paused = False
         elif event.string in ['?']:
-            for key, command in list(signal_dict.items()):
-                print(('%4s %s' % (key, command)))
+            for key, command in signal_dict.items():
+                print('%4s %s' % (key, command))
         elif event.string in signal_dict:
             self.signal_queue.put(signal_dict.get(event.string, ''))
 

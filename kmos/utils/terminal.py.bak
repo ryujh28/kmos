@@ -77,5 +77,5 @@ try:
     setup()
 except Exception as e:
     # There is a failure; set all attributes to default
-    print(('Warning: {}'.format(e)))
+    print ('Warning: {}'.format(e))
     default()

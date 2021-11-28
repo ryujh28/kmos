@@ -67,7 +67,7 @@ def evaluate_rate_expression(rate_expr, parameters={}):
         parameters = [Parameter(), ... ]
      """
     import tokenize
-    from .io import StringIO
+    from io import StringIO
     import math
     from kmos import units
 
@@ -84,7 +84,7 @@ def evaluate_rate_expression(rate_expr, parameters={}):
         replaced_tokens = []
 
         # replace some aliases
-        for old, new in rate_aliases.items():
+        for old, new in rate_aliases.iteritems():
             rate_expr = rate_expr.replace(old, new)
         try:
             input = StringIO.StringIO(rate_expr).readline
@@ -124,7 +124,7 @@ def evaluate_rate_expression(rate_expr, parameters={}):
                                    parameters['p_%s' % species_name]['value'],
                                    )))
                 else:
-                    print(('No JANAF table assigned for %s' % species_name))
+                    print('No JANAF table assigned for %s' % species_name)
                     print('Setting chemical potential to zero')
                     replaced_tokens.append((i, '0'))
             elif token in parameters:

@@ -664,7 +664,7 @@ class ProcessForm(ProxySlaveDelegate, CorrectlyNamed):
                                           project_tree=self.project_tree)
 
             except Exception as e:
-                print(("Fatal Error ... %s" % e))
+                print("Fatal Error ... %s" % e)
                 self.process.condition_list = []
                 self.process.action_list = []
         finally:

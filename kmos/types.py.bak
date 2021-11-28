@@ -316,8 +316,8 @@ class Project(object):
         """Return representation of model as can be written into a *.ini File.
 
         """
-        from configparser import ConfigParser
-        from io import StringIO
+        from ConfigParser import ConfigParser
+        from StringIO import StringIO
 
         config = ConfigParser()
         config.optionxform = str
@@ -399,7 +399,7 @@ class Project(object):
             if process.bystander_list:
                 bystanders = [bystander._shorthand()
                               for bystander in process.bystander_list]
-                print((process.name))
+                print(process.name)
                 print(bystanders)
                 config.set(section_name, 'bystanders', ' + '.join(bystanders))
             if process.tof_count:
@@ -592,9 +592,9 @@ class Project(object):
         self.filename = filename
 
     def import_ini_file(self, filename):
-        from configparser import ConfigParser
+        from ConfigParser import ConfigParser
         from kmos.utils import evaluate_template
-        from io import StringIO
+        from StringIO import StringIO
 
         config = ConfigParser()
         config.optionxform = str
@@ -736,7 +736,7 @@ class Project(object):
                         species, coord = action.split('@')
                     except:
                         print(action)
-                        print((action.split('@')))
+                        print(action.split('@'))
                         raise
                     coord = coord.split('.')
                     if len(coord) == 3:
@@ -861,7 +861,7 @@ class Project(object):
         if not self.version in supported_versions:
             dtd = ET.DTD(APP_ABS_PATH + kmcproject_v0_1_dtd)
             if not dtd.validate(root):
-                print((dtd.error_log.filter_from_errors()[0]))
+                print(dtd.error_log.filter_from_errors()[0])
                 return
             nroot = ET.Element('kmc')
             nroot.set('version', '0.2')
@@ -875,7 +875,7 @@ class Project(object):
                 raise Exception(
                     'xml file version not supported. Is your kmos too old?')
             if not dtd.validate(root):
-                print((dtd.error_log.filter_from_errors()[0]))
+                print(dtd.error_log.filter_from_errors()[0])
                 return
             for child in root:
                 if child.tag == 'lattice':
@@ -1215,7 +1215,8 @@ class Project(object):
         for x in self.get_processes():
             for y in x.condition_list + x.action_list:
                 stripped_speciess = y.species.replace('$', '').replace('^', '')
-                stripped_speciess = [x.strip() for x in stripped_speciess.split(' or ')]
+                stripped_speciess = map(
+                    lambda x: x.strip(), stripped_speciess.split(' or '))
 
                 for stripped_species in stripped_speciess:
                     if not stripped_species in species_names:
@@ -1241,16 +1242,16 @@ class Project(object):
         get_name = lambda x: '_'.join(x.name.split('_')[:-1])
         ml = len(self.get_layers()) > 1
         print('Statistics\n=============')
-        print(('Parameters: %s' % len(self.get_parameters())))
-        print(('Species: %s' % len(self.get_speciess())))
-        print(('Sites: %s' % sum([len(layer.sites)
-                                 for layer in self.layer_list])))
+        print('Parameters: %s' % len(self.get_parameters()))
+        print('Species: %s' % len(self.get_speciess()))
+        print('Sites: %s' % sum([len(layer.sites)
+                                 for layer in self.layer_list]))
 
         names = [get_name(x) for x in self.get_processes()]
         names = list(set(names))
         nrates = len(set([x.rate_constant for x in self.get_processes()]))
-        print(('Processes (%s/%s/%s)\n-------------' %
-              (len(names), nrates, len(self.get_processes()))))
+        print('Processes (%s/%s/%s)\n-------------' %
+              (len(names), nrates, len(self.get_processes())))
 
         for process_type in sorted(names):
             nprocs = len([x for x in self.get_processes()
@@ -1258,10 +1259,10 @@ class Project(object):
             if ml:
                 layer = process_type.split('_')[0]
                 pname = '_'.join(process_type.split('_')[1:])
-                print(('\t- [%s] %s : %s' % (layer, pname, nprocs)))
+                print('\t- [%s] %s : %s' % (layer, pname, nprocs))
 
             else:
-                print(('\t- %s : %s' % (process_type, nprocs)))
+                print('\t- %s : %s' % (process_type, nprocs))
 
     def compile_model(self, code_generator='local_smart'):
         from tempfile import mkdtemp
@@ -1460,7 +1461,7 @@ class LayerList(FixedObject, list):
         """
 
         def drange(n):
-            return list(range(1 - n, n))
+            return range(1 - n, n)
 
         layers = [layer for layer in self if layer.name == layer_name]
         if layers:
@@ -1468,7 +1469,7 @@ class LayerList(FixedObject, list):
         else:
             raise UserWarning('No Layer named %s found.' % layer_name)
 
-        if site_name is not None and not any([re.search(site_name, x) for x in ['_'.join(x.name.split('_')) for x in layer.sites]]):
+        if site_name is not None and not any(map(lambda x: re.search(site_name, x), ['_'.join(x.name.split('_')) for x in layer.sites])):
             raise UserWarning('Layer {layer_name} has no site matching {site_name}. Please check spelling and try again.'.format(**locals()))
 
         if site_name is None:
@@ -1512,7 +1513,7 @@ class LayerList(FixedObject, list):
 
         offset = np.array(coord.offset)
         cell = self.cell
-        layer = [x for x in list(self) if x.name == coord.layer][0]
+        layer = filter(lambda x: x.name == coord.layer, list(self))[0]
         sites = [x for x in layer.sites if x.name == coord.name]
         if not sites:
             raise UserWarning('No site names %s in %s found!' %
@@ -1559,7 +1560,8 @@ class Layer(FixedObject, CorrectlyNamed):
             self.sites.append(site)
 
     def get_site(self, site_name):
-        sites = [site for site in self.sites if site.name == site_name]
+        sites = filter(lambda site: site.name == site_name,
+                       self.sites)
         if not sites:
             raise Exception('Site not found')
         return sites[0]
@@ -2162,7 +2164,7 @@ def parse_chemical_expression(eq, process, project_tree):
 
     # split at ->
     if eq.count('->') != 1:
-        raise Exception('Chemical expression must contain ' +
+        raise StandardError('Chemical expression must contain ' +
                             'exactly one "->"\n%s' % eq)
     eq = re.split('->', eq)
     left, right = eq
@@ -2180,7 +2182,7 @@ def parse_chemical_expression(eq, process, project_tree):
     # small validity checking
     for term in left + right:
         if term.count('@') != 1:
-            raise Exception('Each term needs to contain ' +
+            raise StandardError('Each term needs to contain ' +
                                 'exactly one @:\n%s' % term)
 
     # split each term again at @
@@ -2192,9 +2194,11 @@ def parse_chemical_expression(eq, process, project_tree):
     # check if species is defined
     for term in left + right:
         if term[0][0] in ['$', '^'] and term[0][1:]:
-            if not [x for x in project_tree.get_speciess() if x.name == term[0][1:]]:
+            if not filter(lambda x: x.name == term[0][1:],
+                          project_tree.get_speciess()):
                 raise UserWarning('Species %s unknown ' % term[0:])
-        elif not [x for x in project_tree.get_speciess() if x.name == term[0]]:
+        elif not filter(lambda x: x.name == term[0],
+                        project_tree.get_speciess()):
             raise UserWarning('Species %s unknown ' % term[0])
 
     condition_list = []
@@ -2208,7 +2212,8 @@ def parse_chemical_expression(eq, process, project_tree):
 
         if len(coord_term) == 2:
             name = coord_term[0]
-            active_layers = [x for x in project_tree.get_layers() if x.active]
+            active_layers = filter(lambda x: x.active,
+                                   project_tree.get_layers())
             if len(active_layers) == 1:
                 layer = active_layers[0].name
             else:  # if more than one active try to guess layer from name
@@ -2242,7 +2247,8 @@ def parse_chemical_expression(eq, process, project_tree):
                 raise UserWarning("Layer %s not known, must be one of %s"
                                   % (layer, layer_names))
             else:
-                layer_instance = [x for x in project_tree.get_layers() if x.name == layer][0]
+                layer_instance = filter(lambda x: x.name == layer,
+                                        project_tree.get_layers())[0]
                 site_names = [x.name for x in layer_instance.sites]
                 if name not in site_names:
                     raise UserWarning("Site %s not known, must be one of %s"
@@ -2260,7 +2266,7 @@ def parse_chemical_expression(eq, process, project_tree):
     # every condition that does not have a corresponding action on the
     # same coordinate gets complemented with a 'default_species' action
     for condition in condition_list:
-        if not [x for x in action_list if x.coord == condition.coord]:
+        if not filter(lambda x: x.coord == condition.coord, action_list):
             action_list.append(ConditionAction(species=default_species,
                                                coord=condition.coord))
 
@@ -2268,7 +2274,7 @@ def parse_chemical_expression(eq, process, project_tree):
     # the same coordinate gets complemented with a 'default_species'
     # condition
     for action in action_list:
-        if not [x for x in condition_list if x.coord == action.coord] \
+        if not filter(lambda x: x.coord == action.coord, condition_list) \
                 and not action.species[0] in ['^', '$']:
             condition_list.append(ConditionAction(species=default_species,
                                                   coord=action.coord))
@@ -2283,7 +2289,9 @@ def parse_chemical_expression(eq, process, project_tree):
         #      the left side, the condition will be added with the same
         #      species as the annihilated one.
         if action.species[0] == '$':
-            corresponding_condition = [x for x in condition_list if x.coord == action.coord]
+            corresponding_condition = filter(lambda x:
+                                             x.coord == action.coord,
+                                             condition_list)
             if action.species[1:]:
                 if not corresponding_condition:
                     condition_list.append(

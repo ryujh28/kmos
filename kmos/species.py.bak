@@ -106,7 +106,7 @@ class Species(object):
         try:
             data = np.loadtxt(filename, skiprows=2, usecols=(0, 2, 4))
         except IOError:
-            print(('Warning: JANAF table %s not installed' % filename))
+            print('Warning: JANAF table %s not installed' % filename)
             return
 
         # define data
